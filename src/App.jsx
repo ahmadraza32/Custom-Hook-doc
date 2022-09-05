@@ -1,34 +1,17 @@
-import React, { useEffect, useReducer } from 'react'
-import axios from 'axios'
-import { cartReducer } from './reducers/cartProduct'
-import Product from './components/Product'
-import "./App.css"
-import Cart from './components/Cart'
+import React from 'react'
+import useLocalStorage from './components/useLocalStorage'
+import useUpdateLogger from './components/useUpdateLogger'
 
 const App = () => {
-  const [state, dispatch] = useReducer(cartReducer, {
-    cart: [], products: []
-  })
+  const [name, setName] = useLocalStorage('name', '')
 
-  const fetchProducts = async () => {
-    const { data } = await axios.get('https://dummyjson.com/products')
-    dispatch({
-      type: 'ADD_PRODUCTS', payload: data.products
-    })
-  }
-
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+  useUpdateLogger(name)
 
   return (
-    <>
-      <h1>Shopping Cart</h1>
-      <div className='container'>
-        <Product state={state} dispatch={dispatch} />
-        <Cart state={state} dispatch={dispatch} />
-      </div>
-    </>
+    <div>
+      <h1>Custom Hook</h1>
+      <input type="text" value={name} onChange={e => setName(e.target.value)} />
+    </div>
   )
 }
 
